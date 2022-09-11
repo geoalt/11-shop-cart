@@ -33,6 +33,7 @@ describe('1 - Teste a função fetchProducts', () => {
   });
 
   it('ao chamar a função \'fetchProduct\' sem argumento, verifica se função \'fetch\' retorna um erro com a mensagem: \'You must provide an url\'', async () => {
+    expect.assertions(1);
 
     try {
       await fetchProducts();
