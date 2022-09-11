@@ -1,6 +1,12 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
+
+function append(item) {
+  const SELECT_SECTION = document.querySelector('.items');
+  SELECT_SECTION.appendChild(item);
+}
+
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
  * @param {string} imageSource - URL da imagem.
@@ -44,7 +50,7 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
-  return section;
+  append(section);
 };
 
 /**
@@ -70,6 +76,9 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
-console.log(fetchProducts('computador'));
+async function requestFromProductName() {
+  const FETCH = await Promise.resolve(fetchProducts('computador'));
+  FETCH.results.forEach(createProductItemElement);
+}
 
-window.onload = () => { };
+window.onload = requestFromProductName;
