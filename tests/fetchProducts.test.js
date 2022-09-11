@@ -27,9 +27,7 @@ describe('1 - Teste a função fetchProducts', () => {
     const ARG = 'computador'
 
     expect.assertions(1);
-    await fetchProducts(ARG);
-    console.log(fetch)
-    expect(fetch).toMatchObject(computadorSearch);
+    expect(await fetchProducts(ARG)).toMatchObject(computadorSearch);
   });
 
   it('ao chamar a função \'fetchProduct\' sem argumento, verifica se função \'fetch\' retorna um erro com a mensagem: \'You must provide an url\'', async () => {
