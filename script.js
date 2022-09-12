@@ -54,7 +54,8 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
 };
 
 function cartItemClickListener(e) {
-  console.log(e.target);
+  const TARGET = e.target;
+  TARGET.remove();
 }
 
 /**
