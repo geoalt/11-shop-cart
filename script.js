@@ -73,6 +73,7 @@ const createCartItemElement = ({ id, title, price }) => {
   li.addEventListener('click', cartItemClickListener);
 
   append(li, '.cart__items');
+  saveCartItems({ id, title, price });
 };
 
 async function sendItemToBeCreated(id) {
@@ -102,7 +103,14 @@ function addEventToProductButton() {
   GET_BUTTONS.forEach((button) => button.addEventListener('click', getIdFromProductItem));
 }
 
+function requestLocalCartItems() {
+  const RECOVERY = getSavedCartItems();
+  const PARSING = JSON.parse(RECOVERY);
+  PARSING.forEach((item) => createCartItemElement(item));
+}
+
 window.onload = async () => {
   await requestFromProductName();
   addEventToProductButton();
+  requestLocalCartItems();
 };

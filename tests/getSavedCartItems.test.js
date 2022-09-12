@@ -11,11 +11,11 @@ describe('4 - Teste a função getSavedCartItems', () => {
     expect(localStorage.getItem).toHaveBeenCalled();
   });
 
-  it('ao chamar a função \'getSavedCartItems\', verifica se o método \'localStorage.getItem\' foi chamado com \'cartItems\' como parâmetro', async () => {
-    const ARG = 'cartItem';
+  it('ao chamar a função \'getSavedCartItems\', verifica se o método \'localStorage.getItem\' foi chamado com \'cartItems\' como parâmetro', () => {
+    const ARG = 'cartItems';
 
     expect.assertions(1);
-    await getSavedCartItems()
+    getSavedCartItems()
     expect(localStorage.getItem).toHaveBeenCalledWith(ARG);
   });
 });
