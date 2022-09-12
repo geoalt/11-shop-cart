@@ -2,8 +2,8 @@
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 
-function append(item) {
-  const SELECT_SECTION = document.querySelector('.items');
+function append(item, parentElement) {
+  const SELECT_SECTION = document.querySelector(parentElement);
   SELECT_SECTION.appendChild(item);
 }
 
@@ -50,15 +50,12 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
-  append(section);
+  append(section, '.items');
 };
 
-/**
- * Função que recupera o ID do produto passado como parâmetro.
- * @param {Element} product - Elemento do produto.
- * @returns {string} ID do produto.
- */
-const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
+function cartItemClickListener(e) {
+  console.log(e.target);
+}
 
 /**
  * Função responsável por criar e retornar um item do carrinho.
@@ -73,12 +70,38 @@ const createCartItemElement = ({ id, title, price }) => {
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
-  return li;
+
+  append(li, '.cart__items');
+};
+
+async function sendItemToBeCreated(id) {
+  const FETCH = await fetchItem(id);
+  createCartItemElement(FETCH);
+}
+
+/**
+ * Função que recupera o ID do produto passado como parâmetro.
+ * @param {Element} product - Elemento do produto.
+ * @returns {string} ID do produto.
+ */
+const getIdFromProductItem = (product) => {
+  const SECTION = product.target.parentElement;
+  const SELECT_CLASS = SECTION.querySelector('.item_id');
+  const ITEM_ID = SELECT_CLASS.innerText;
+  sendItemToBeCreated(ITEM_ID);
 };
 
 async function requestFromProductName() {
-  const FETCH = await Promise.resolve(fetchProducts('computador'));
+  const FETCH = await fetchProducts('computador');
   FETCH.results.forEach(createProductItemElement);
 }
 
-window.onload = requestFromProductName;
+function addEventToProductButton() {
+  const GET_BUTTONS = document.querySelectorAll('.item__add');
+  GET_BUTTONS.forEach((button) => button.addEventListener('click', getIdFromProductItem));
+}
+
+window.onload = async () => {
+  await requestFromProductName();
+  addEventToProductButton();
+};
