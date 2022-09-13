@@ -6,7 +6,6 @@ const saveCartItems = ({ id, price, title }) => {
     price,
     title,
   });
-
   localStorage.setItem('cartItems', JSON.stringify(ITEM_STORAGE));
 };
 

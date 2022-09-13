@@ -1,7 +1,4 @@
-const getSavedCartItems = () => {
-  const RECOVERY_STORAGE_ITEMS = localStorage.getItem('cartItems');
-  return RECOVERY_STORAGE_ITEMS;
-};
+const getSavedCartItems = () => localStorage.getItem('cartItems');
 
 if (typeof module !== 'undefined') {
   module.exports = getSavedCartItems;

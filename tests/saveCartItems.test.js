@@ -21,5 +21,4 @@ describe('3 - Teste a função saveCartItems', () => {
     await saveCartItems(ARG_B)
     expect(localStorage.setItem).toHaveBeenCalledWith(ARG_A, ARG_B);
   });
-
 });

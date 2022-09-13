@@ -1,6 +1,17 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
+
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
+const CART = document.querySelector('.total-price');
+const CREATE_PARA = document.createElement('P');
+
+function refreshPrice() {
+  const CART_TOTAL = ITEM_STORAGE
+    .reduce((total, item) => total + item.price, 0);
+
+  CREATE_PARA.innerText = `Subtotal: R$${CART_TOTAL}`;
+  CART.appendChild(CREATE_PARA);
+}
 
 function append(item, parentElement) {
   const SELECT_SECTION = document.querySelector(parentElement);
@@ -53,9 +64,38 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   append(section, '.items');
 };
 
+function clearStorage() {
+  while (ITEM_STORAGE.length > 0) {
+    ITEM_STORAGE.pop();
+  }
+
+  localStorage.clear();
+}
+
+function removeFromLocalStorage(id, callback) {
+  const STORAGE = JSON.parse(getSavedCartItems());
+  const FIND_ITEM = STORAGE.findIndex((item) => item.id === id);
+  STORAGE.splice(FIND_ITEM, 1);
+
+  callback();
+
+  STORAGE.forEach((item) => {
+    saveCartItems(item);
+  });
+}
+
+function extractCartItemId(string) {
+  const TARGET_TEXT = string.innerText;
+  const SPLIT = TARGET_TEXT.split(' | ');
+  const SLICE = SPLIT[0].slice(4);
+  removeFromLocalStorage(SLICE, clearStorage);
+}
+
 function cartItemClickListener(e) {
   const TARGET = e.target;
   TARGET.remove();
+  extractCartItemId(TARGET);
+  refreshPrice();
 }
 
 /**
@@ -76,9 +116,10 @@ const createCartItemElement = ({ id, title, price }) => {
   saveCartItems({ id, title, price });
 };
 
-async function sendItemToBeCreated(id) {
+async function sendCartItemToBeCreated(id) {
   const FETCH = await fetchItem(id);
   createCartItemElement(FETCH);
+  refreshPrice();
 }
 
 /**
@@ -90,7 +131,7 @@ const getIdFromProductItem = (product) => {
   const SECTION = product.target.parentElement;
   const SELECT_CLASS = SECTION.querySelector('.item_id');
   const ITEM_ID = SELECT_CLASS.innerText;
-  sendItemToBeCreated(ITEM_ID);
+  sendCartItemToBeCreated(ITEM_ID);
 };
 
 async function requestFromProductName() {
@@ -106,11 +147,14 @@ function addEventToProductButton() {
 function requestLocalCartItems() {
   const RECOVERY = getSavedCartItems();
   const PARSING = JSON.parse(RECOVERY);
-  PARSING.forEach((item) => createCartItemElement(item));
+  if (PARSING) {
+    PARSING.forEach(createCartItemElement);
+  }
 }
 
 window.onload = async () => {
   await requestFromProductName();
   addEventToProductButton();
   requestLocalCartItems();
+  refreshPrice();
 };

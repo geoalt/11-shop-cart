@@ -42,7 +42,4 @@ describe('2 - Teste a função fetchItem', () => {
       expect(e.message).toBe(EXPECTED);
     }
   });
-
-
-
 });
