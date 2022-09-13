@@ -6,6 +6,20 @@ const CART_PRICE = document.querySelector('.total-price');
 const EMPTY_CART = document.querySelector('.empty-cart');
 const CREATE_PARA = document.createElement('P');
 
+function displayLoading(selector, element) {
+  const s = document.querySelector(selector);
+  const e = document.createElement(element);
+  e.innerText = 'carregando...';
+  e.classList.add('loading');
+
+  s.append(e);
+}
+
+function removeLoading() {
+  const LOADING = document.querySelector('.loading');
+  LOADING.remove();
+}
+
 function refreshPrice() {
   const CART_TOTAL = ITEM_STORAGE
     .reduce((total, item) => total + item.price, 0);
@@ -118,8 +132,12 @@ const createCartItemElement = ({ id, title, price }) => {
 };
 
 async function sendCartItemToBeCreated(id) {
+  displayLoading('.cart', 'p');
+
   const FETCH = await fetchItem(id);
   createCartItemElement(FETCH);
+
+  removeLoading();
   refreshPrice();
 }
 
@@ -136,8 +154,12 @@ const getIdFromProductItem = (product) => {
 };
 
 async function requestFromProductName() {
+  displayLoading('.items', 'p');
+
   const FETCH = await fetchProducts('computador');
   FETCH.results.forEach(createProductItemElement);
+
+  removeLoading();
 }
 
 function addEventToProductButton() {
