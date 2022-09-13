@@ -2,7 +2,8 @@
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
-const CART = document.querySelector('.total-price');
+const CART_PRICE = document.querySelector('.total-price');
+const EMPTY_CART = document.querySelector('.empty-cart');
 const CREATE_PARA = document.createElement('P');
 
 function refreshPrice() {
@@ -10,7 +11,7 @@ function refreshPrice() {
     .reduce((total, item) => total + item.price, 0);
 
   CREATE_PARA.innerText = `Subtotal: R$${CART_TOTAL}`;
-  CART.appendChild(CREATE_PARA);
+  CART_PRICE.appendChild(CREATE_PARA);
 }
 
 function append(item, parentElement) {
@@ -151,6 +152,16 @@ function requestLocalCartItems() {
     PARSING.forEach(createCartItemElement);
   }
 }
+
+function emptyCart() {
+  const CART_ITEM = document.querySelectorAll('.cart__item');
+  CART_ITEM.forEach((it) => it.remove());
+
+  clearStorage();
+  refreshPrice();
+}
+
+EMPTY_CART.addEventListener('click', emptyCart);
 
 window.onload = async () => {
   await requestFromProductName();
